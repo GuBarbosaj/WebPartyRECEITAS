@@ -80,7 +80,7 @@ const IncludeReceitas: React.FunctionComponent<IReceitasProps> = (props) => {
     }
 
     function verificaCamposObrigatorios():boolean {
-        if(!stringIsNullOrEmpty(nomeReceita)){
+        if(stringIsNullOrEmpty(nomeReceita)){
             alert("Campo nome da receita não está preenchido!")
             return false
         }
@@ -131,7 +131,7 @@ const IncludeReceitas: React.FunctionComponent<IReceitasProps> = (props) => {
                     </Field>
                 </div>
                 <div className={useStackClassName()}>
-                    <Button icon={<Save24Regular/>} onSelect={salvarReceita()}> Salvar Registro
+                    <Button icon={<Save24Regular/>} onClick={salvarReceita}> Salvar Registro
 
                     </Button>
                 </div>
