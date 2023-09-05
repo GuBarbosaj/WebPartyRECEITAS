@@ -4,6 +4,8 @@ import { Combobox, ComboboxProps, Option, Field, Input, InputProps, makeResetSty
 import { DatePicker } from "@fluentui/react-datepicker-compat";
 import { Save24Regular} from "@fluentui/react-icons";
 import { stringIsNullOrEmpty } from "@pnp/pnpjs";
+import ListSP from "../../../../../shared/services/List.service";
+import { IReceitas } from '../../../interfaces/IReceitas';
 
 const useStackClassName = makeResetStyles({
 
@@ -28,6 +30,8 @@ const useStyles = makeStyles({
 });
 
 const IncludeReceitas: React.FunctionComponent<IReceitasProps> = (props) => {
+
+    const spList = new ListSP();
 
     const styles = useStyles();
 
@@ -56,15 +60,31 @@ const IncludeReceitas: React.FunctionComponent<IReceitasProps> = (props) => {
     const [dataReceita, setDataReceita] = React.useState<Date>(new Date());
 
     async function salvarReceita():Promise<void> {
+        if(verificaCamposObrigatorios()){
+            const receita:IReceitas = {
+                Receita: nomeReceita,
+                TipoReceita: selectedTipoReceita[0]? selectedTipoReceita[0]: "",
+                Cara: caraReceita,
+                DataTentativa: dataReceita
+            };
+
+            await spList.postList(props.receitaList,receita)
+            .then((result) => {
+                console.log('R: ', result);
+            })
+            .catch((result) => {
+                console.log('E: ', result)
+            })
+        }
         
     }
 
     function verificaCamposObrigatorios():boolean {
         if(!stringIsNullOrEmpty(nomeReceita)){
-
-        }else{
-            alert("")
+            alert("Campo nome da receita não está preenchido!")
+            return false
         }
+        return true
     }
 
     return (
@@ -111,7 +131,7 @@ const IncludeReceitas: React.FunctionComponent<IReceitasProps> = (props) => {
                     </Field>
                 </div>
                 <div className={useStackClassName()}>
-                    <Button icon={<Save24Regular/>}> Salvar Registro
+                    <Button icon={<Save24Regular/>} onSelect={salvarReceita()}> Salvar Registro
 
                     </Button>
                 </div>
